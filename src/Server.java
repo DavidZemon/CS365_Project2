@@ -66,9 +66,9 @@ public class Server extends JFrame implements ActionListener {
 
 	final static String CRLF = "\r\n";
 
-	//--------------------------------
-	//Constructor
-	//--------------------------------
+	/**
+	 * Constructor
+	 */
 	public Server () {
 
 		//init Frame
@@ -96,9 +96,11 @@ public class Server extends JFrame implements ActionListener {
 		getContentPane().add(label, BorderLayout.CENTER);
 	}
 
-	//------------------------------------
-	//main
-	//------------------------------------
+	/**
+	 * Main
+	 * @param argv Arguments from the terminal
+	 * @throws Exception
+	 */
 	public static void main (String argv[]) throws Exception {
 		//create a Server object
 		Server theServer = new Server();
@@ -185,9 +187,10 @@ public class Server extends JFrame implements ActionListener {
 	}
 
 
-	//------------------------
-	//Handler for timer
-	//------------------------
+	/**
+	 * Handler for the timer
+	 * @param e Event to act upon
+	 */
 	public void actionPerformed (ActionEvent e) {
 
 		//if the current image nb is less than the length of the video
@@ -229,9 +232,10 @@ public class Server extends JFrame implements ActionListener {
 		}
 	}
 
-	//------------------------------------
-	//Parse RTSP Request
-	//------------------------------------
+	/**
+	 * Parse RTSP request
+	 * @return request type
+	 */
 	private int parseRTSPRequest () {
 		int request_type = -1;
 		try {
@@ -280,9 +284,9 @@ public class Server extends JFrame implements ActionListener {
 		return (request_type);
 	}
 
-	//------------------------------------
-	//Send RTSP Response
-	//------------------------------------
+	/**
+	 * Send RTSP response
+	 */
 	private void sendRTSPResponse () {
 		try {
 			RTSPBufferedWriter.write("RTSP/1.0 200 OK" + CRLF);
