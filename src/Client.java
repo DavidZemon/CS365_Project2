@@ -298,9 +298,9 @@ public class Client {
 				rtp_packet.printHeader();
 
 				//get the payload bitstream from the RTPPacket object
-				int payload_length = rtp_packet.getPayload_length();
+				int payload_length = rtp_packet.getPayloadLength();
 				byte[] payload = new byte[payload_length];
-				rtp_packet.getpayload(payload);
+				rtp_packet.getPayload(payload);
 
 				//get an Image object from the payload bitstream
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
