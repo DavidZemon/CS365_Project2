@@ -5,8 +5,7 @@
  * Time: 11:34 PM
  */
 
-public class RTPPacket 
-{
+public class RTPPacket {
 
 	// Size of the RTP header:
 	static int HEADERSIZE = 12;
@@ -34,8 +33,7 @@ public class RTPPacket
 	//--------------------------
 	// Constructor of an RTPPacket object from header fields and payload bitstream
 	//--------------------------
-	public RTPPacket (int PType, int frameNum, int Time, byte[] data, int dataLength) 
-	{
+	public RTPPacket (int PType, int frameNum, int Time, byte[] data, int dataLength) {
 		//fill by default header fields:
 		versionNum = 2;
 		padding = 0;
@@ -58,22 +56,22 @@ public class RTPPacket
 		//.............
 		//fill the header array of byte with RTP header fields
 
-	    header[0] = (byte) ((versionNum << 6 | padding << 5 | extension << 4 | contribSrc));
-	    
-	    header[1] = (byte) (marker << 7 | payloadType);
-	    
-	    header[2] = (byte) (seqNum >> 8);
-	    header[3] = (byte) (seqNum & 0xFF);
+		header[0] = (byte) ((versionNum << 6 | padding << 5 | extension << 4 | contribSrc));
 
-	    header[4] = (byte) (timeStamp >> 24);
-	    header[5] = (byte) ((timeStamp <<8) >> 24);
-	    header[6] = (byte) ((timeStamp <<16) >> 24);
-	    header[7] = (byte) ((timeStamp <<24) >> 24);
-	   
-	    header[8] = (byte) (srcID >> 24);
-	    header[9] = (byte) ((srcID <<8) >> 24);
-	    header[10] = (byte) ((srcID <<16) >> 24);
-	    header[11] = (byte) ((srcID <<24) >> 24);
+		header[1] = (byte) (marker << 7 | payloadType);
+
+		header[2] = (byte) (seqNum >> 8);
+		header[3] = (byte) (seqNum & 0xFF);
+
+		header[4] = (byte) (timeStamp >> 24);
+		header[5] = (byte) ((timeStamp << 8) >> 24);
+		header[6] = (byte) ((timeStamp << 16) >> 24);
+		header[7] = (byte) ((timeStamp << 24) >> 24);
+
+		header[8] = (byte) (srcID >> 24);
+		header[9] = (byte) ((srcID << 8) >> 24);
+		header[10] = (byte) ((srcID << 16) >> 24);
+		header[11] = (byte) ((srcID << 24) >> 24);
 
 
 		//fill the payload bitstream:
@@ -82,18 +80,14 @@ public class RTPPacket
 		payload = new byte[dataLength];
 
 		//fill payload array of byte from data (given in parameter of the constructor)
-	    for (int i=0; i<dataLength; i++)
-	    {
-	        payload[i] = data[i];
-	    }
+		System.arraycopy(data, 0, payload, 0, dataLength);
 
 	}
 
 	//--------------------------
 	//Constructor of an RTPPacket object from the packet bitstream
 	//--------------------------
-	public RTPPacket (byte[] packet, int packetSize)
-	{
+	public RTPPacket (byte[] packet, int packetSize) {
 		//fill default fields:
 		versionNum = 2;
 		padding = 0;
@@ -106,14 +100,12 @@ public class RTPPacket
 		if (packetSize >= HEADERSIZE) {
 			//get the header bitsream:
 			header = new byte[HEADERSIZE];
-			for (int i = 0; i < HEADERSIZE; i++)
-				header[i] = packet[i];
+			System.arraycopy(packet, 0, header, 0, HEADERSIZE);
 
 			//get the payload bitstream:
 			payloadSize = packetSize - HEADERSIZE;
 			payload = new byte[payloadSize];
-			for (int i = HEADERSIZE; i < packetSize; i++)
-				payload[i - HEADERSIZE] = packet[i];
+			System.arraycopy(packet, HEADERSIZE, payload, HEADERSIZE - HEADERSIZE, packetSize - HEADERSIZE);
 
 			//interpret the changing fields of the header:
 			payloadType = header[1] & 127;
@@ -124,10 +116,9 @@ public class RTPPacket
 	}
 
 	/**
-	*	getPayload - returns the bitstream of the packet and the size of said bitstream
-	*/
-	public int getPayload (byte[] data) 
-	{
+	 * getPayload - returns the bitstream of the packet and the size of said bitstream
+	 */
+	public int getPayload (byte[] data) {
 
 		System.arraycopy(payload, 0, data, 0, payloadSize);
 
@@ -135,77 +126,66 @@ public class RTPPacket
 	}
 
 	/**
-	*	getPayloadLength - returns the length of the payload
-	*/
-	public int getPayloadLength () 
-	{
+	 * getPayloadLength - returns the length of the payload
+	 */
+	public int getPayloadLength () {
 		return (payloadSize);
 	}
 
 	/**
-	*	getLength - returns total length of packet
-	*/
-	public int getLength () 
-	{
+	 * getLength - returns total length of packet
+	 */
+	public int getLength () {
 		return (payloadSize + HEADERSIZE);
 	}
 
 	/**
-	*	getPacket - returns the packet's bitstream and the length of the packet
-	*/
-	public int getPacket (byte[] packet) 
-	{
+	 * getPacket - returns the packet's bitstream and the length of the packet
+	 */
+	public int getPacket (byte[] packet) {
 		//construct the packet = header + payload
-		for (int i = 0; i < HEADERSIZE; i++)
-			packet[i] = header[i];
-		for (int i = 0; i < payloadSize; i++)
-			packet[i + HEADERSIZE] = payload[i];
+		System.arraycopy(header, 0, packet, 0, HEADERSIZE);
+		System.arraycopy(payload, 0, packet, HEADERSIZE, payloadSize);
 
 		//return total size of the packet
 		return (payloadSize + HEADERSIZE);
 	}
 
 	/**
-	*	getTimestamp - Getter function for the timestamp
-	*/
+	 * getTimestamp - Getter function for the timestamp
+	 */
 
-	public int getTimestamp () 
-	{
+	public int getTimestamp () {
 		return (timeStamp);
 	}
 
 	/**
-	*	getSequenceNumber - Getter function for the sequence number
-	*/
-	public int getSequenceNumber () 
-	{
+	 * getSequenceNumber - Getter function for the sequence number
+	 */
+	public int getSequenceNumber () {
 		return (seqNum);
 	}
 
 	/**
-	*	getPayloadType - Getter function for the payload type
-	*/
-	public int getPayloadType () 
-	{
+	 * getPayloadType - Getter function for the payload type
+	 */
+	public int getPayloadType () {
 		return (payloadType);
 	}
 
 
 	/**
-	*	printHeader - print the packet header w/o the srcId
-	*/
+	 * printHeader - print the packet header w/o the srcId
+	 */
 	public void printHeader () {
-    	for (int i=0; i < (HEADERSIZE-4); i++)
-      	{
-			for (int j = 7; j>=0 ; j--)
-			{
-	 	 		if (((1<<j) & header[i] ) != 0)
-		    		System.out.print("1");
-				else
-		 			 System.out.print("0");
+		for (int i = 0; i < (HEADERSIZE - 4); i++) {
+			for (int j = 7; j >= 0; j--) {
+				if (((1 << j) & header[i]) != 0) System.out.print("1");
+				else System.out.print("0");
 				System.out.print(" ");
-	      }
-	    System.out.println();
+			}
+			System.out.println();
+		}
 	}
 
 	//return the unsigned value of 8-bit integer nb
